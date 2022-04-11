@@ -1,5 +1,4 @@
-// import { ClipboardCopy } from 'https://unpkg.com/@georapbox/clipboard-copy-element/dist/clipboard-copy.min.js';
-import { ClipboardCopy } from '../src/clipboard-copy.js';
+import { ClipboardCopy } from 'https://unpkg.com/@georapbox/clipboard-copy-element/dist/clipboard-copy.min.js';
 
 ClipboardCopy.defineCustomElement();
 
