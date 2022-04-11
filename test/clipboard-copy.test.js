@@ -153,14 +153,96 @@ describe('<clipboard-copy>', () => {
 
     btn.click();
 
-    await waitUntil(() => writeTextSpy.calledOnce);
+    expect(writeTextSpy).to.have.been.calledWith(copyValue);
+
+    writeTextSpy.restore();
+  });
+
+  it('copies value from input element', async () => {
+    const copyValue = 'Text to copy from input value';
+
+    const targetEl = document.createElement('input');
+    targetEl.id = 'target-element';
+    targetEl.type = 'text';
+    targetEl.value = copyValue;
+    document.body.appendChild(targetEl);
+
+    const el = await fixture(html`<clipboard-copy from="input[type='text']"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
+
+    btn.click();
 
     expect(writeTextSpy).to.have.been.calledWith(copyValue);
 
     writeTextSpy.restore();
   });
 
+  it('copies href from anchor element', async () => {
+    const copyValue = 'https://giithub.com/';
+
+    const targetEl = document.createElement('a');
+    targetEl.id = 'target-element';
+    targetEl.href = copyValue;
+    document.body.appendChild(targetEl);
+
+    const el = await fixture(html`<clipboard-copy from="#target-element"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
+
+    btn.click();
+
+    expect(writeTextSpy).to.have.been.calledWith(copyValue);
+
+    writeTextSpy.restore();
+  });
+
+  it('copies textContent from div element', async () => {
+    const copyValue = 'Text to copy from div element';
+
+    const targetEl = document.createElement('div');
+    targetEl.id = 'target-element';
+    targetEl.textContent = copyValue;
+    document.body.appendChild(targetEl);
+
+    const el = await fixture(html`<clipboard-copy from="#target-element"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
+
+    btn.click();
+
+    expect(writeTextSpy).to.have.been.calledWith(copyValue);
+
+    writeTextSpy.restore();
+  });
+
+  it('tries to copy textContent from element that does not exist', async () => {
+    const el = await fixture(html`<clipboard-copy from="#does-not-exist"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
+
+    btn.click();
+
+    expect(writeTextSpy).to.not.have.been.called;
+
+    writeTextSpy.restore();
+  });
+
+  it('do not provide value and from attributes', async () => {
+    const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
+
+    btn.click();
+
+    expect(writeTextSpy).to.not.have.been.called;
+
+    writeTextSpy.restore();
+  });
+
   afterEach(() => {
+    const targetEl = document.getElementById('target-element');
+    targetEl && targetEl.remove();
     fixtureCleanup();
   });
 });
