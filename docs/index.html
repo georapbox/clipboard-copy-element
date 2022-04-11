@@ -28,7 +28,7 @@
         <clipboard-copy value="Copy from value attribute"></clipboard-copy>
       </div>
 
-      <textarea name="paste-area" id="paste-area" class="form-control mb-2" placeholder="Paste here"></textarea>
+      <textarea class="form-control mb-2" placeholder="Paste here"></textarea>
 
       <pre class="language-html"><code>&lt;clipboard-copy value="Copy from value attribute"&gt;&lt;/clipboard-copy&gt;</code></pre>
     </div>
@@ -41,7 +41,7 @@
         <span data-element="span">Copy text content from span element</span>
       </div>
 
-      <textarea name="paste-area" id="paste-area" class="form-control mb-2" placeholder="Paste here"></textarea>
+      <textarea class="form-control mb-2" placeholder="Paste here"></textarea>
 
       <pre class="language-html"><code>&lt;clipboard-copy from="[data-element='span']"&gt;&lt;/clipboard-copy&gt;
 &lt;span data-element="span"&gt;Copy text content from span element&lt;/span&gt;</code></pre>
@@ -53,7 +53,7 @@
         <a id="anchor" href="https://github.com" target="_blank" rel="noreferrer noopener">Copy href from anchor element</a>
       </div>
 
-      <textarea name="paste-area" id="paste-area" class="form-control mb-2" placeholder="Paste here"></textarea>
+      <textarea class="form-control mb-2" placeholder="Paste here"></textarea>
 
       <pre class="language-html"><code>&lt;clipboard-copy from="#anchor"&gt;&lt;/clipboard-copy&gt;
 &lt;a id="anchor" href="https://github.com"&gt;Copy href from anchor element&lt;/a&gt;</code></pre>
@@ -65,10 +65,22 @@
         <input class="form-control" value="Copy value from input element" type="text">
       </div>
 
-      <textarea name="paste-area" id="paste-area" class="form-control mb-2" placeholder="Paste here"></textarea>
+      <textarea class="form-control mb-2" placeholder="Paste here"></textarea>
 
-      <pre class="language-html"><code>&lt;clipboard-copy from=".input"&gt;&lt;/clipboard-copy&gt;
-&lt;input class="input" value="Copy value from input element" type="text"&gt;</code></pre>
+      <pre class="language-html"><code>&lt;clipboard-copy from="input[type='text']"&gt;&lt;/clipboard-copy&gt;
+&lt;input value="Copy value from input element" type="text"&gt;</code></pre>
+    </div>
+
+    <div class="card mb-3">
+      <div class="demo-section">
+        <clipboard-copy from=".my-textarea"></clipboard-copy>
+        <textarea class="my-textarea form-control">Copy value from textarea element</textarea>
+      </div>
+
+      <textarea class="form-control mb-2" placeholder="Paste here"></textarea>
+
+      <pre class="language-html"><code>&lt;clipboard-copy from=".my-textarea"&gt;&lt;/clipboard-copy&gt;
+&lt;textarea class="my-textarea"&gt;Copy value from textarea element&lt;/textarea&gt;</code></pre>
     </div>
 
     <pre id="console"></pre>

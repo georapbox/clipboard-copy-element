@@ -95,56 +95,6 @@ describe('<clipboard-copy>', () => {
     expect(el).lightDom.to.equal('<span slot="button-content">Copy</span>');
   });
 
-  it('clipboard-copy:click event is emitted', async () => {
-    const el = await fixture(html`<clipboard-copy value="Text to copy from value"></clipboard-copy>`);
-    const btn = el.shadowRoot.querySelector('button');
-    const handler = sinon.spy();
-
-    el.addEventListener('clipboard-copy:click', handler);
-
-    btn.click();
-
-    await waitUntil(() => handler.calledOnce);
-
-    expect(handler).to.have.been.calledOnce;
-  });
-
-  it('clipboard-copy:success event is emitted', async () => {
-    const copyValue = 'Text to copy from value';
-    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
-    const btn = el.shadowRoot.querySelector('button');
-    const handler = sinon.spy();
-    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
-
-    el.addEventListener('clipboard-copy:success', handler);
-
-    btn.click();
-
-    await waitUntil(() => handler.calledOnce);
-
-    expect(handler).to.have.been.calledOnce;
-
-    writeTextStub.restore();
-  });
-
-  it('clipboard-copy:error event is emitted', async () => {
-    const copyValue = 'Text to copy from value';
-    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
-    const btn = el.shadowRoot.querySelector('button');
-    const handler = sinon.spy();
-    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
-
-    el.addEventListener('clipboard-copy:error', handler);
-
-    btn.click();
-
-    await waitUntil(() => handler.calledOnce);
-
-    expect(handler).to.have.been.calledOnce;
-
-    writeTextStub.restore();
-  });
-
   it('copies from "value" attribute', async () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
@@ -168,6 +118,25 @@ describe('<clipboard-copy>', () => {
     document.body.appendChild(targetEl);
 
     const el = await fixture(html`<clipboard-copy from="input[type='text']"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
+
+    btn.click();
+
+    expect(writeTextSpy).to.have.been.calledWith(copyValue);
+
+    writeTextSpy.restore();
+  });
+
+  it('copies value from textarea element', async () => {
+    const copyValue = 'Text to copy from textarea';
+
+    const targetEl = document.createElement('textarea');
+    targetEl.id = 'target-element';
+    targetEl.value = copyValue;
+    document.body.appendChild(targetEl);
+
+    const el = await fixture(html`<clipboard-copy from="textarea"></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
@@ -238,6 +207,56 @@ describe('<clipboard-copy>', () => {
     expect(writeTextSpy).to.not.have.been.called;
 
     writeTextSpy.restore();
+  });
+
+  it('clipboard-copy:click event is emitted', async () => {
+    const el = await fixture(html`<clipboard-copy value="Text to copy from value"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const handler = sinon.spy();
+
+    el.addEventListener('clipboard-copy:click', handler);
+
+    btn.click();
+
+    await waitUntil(() => handler.calledOnce);
+
+    expect(handler).to.have.been.calledOnce;
+  });
+
+  it('clipboard-copy:success event is emitted', async () => {
+    const copyValue = 'Text to copy from value';
+    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const handler = sinon.spy();
+    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
+
+    el.addEventListener('clipboard-copy:success', handler);
+
+    btn.click();
+
+    await waitUntil(() => handler.calledOnce);
+
+    expect(handler).to.have.been.calledOnce;
+
+    writeTextStub.restore();
+  });
+
+  it('clipboard-copy:error event is emitted', async () => {
+    const copyValue = 'Text to copy from value';
+    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const handler = sinon.spy();
+    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
+
+    el.addEventListener('clipboard-copy:error', handler);
+
+    btn.click();
+
+    await waitUntil(() => handler.calledOnce);
+
+    expect(handler).to.have.been.calledOnce;
+
+    writeTextStub.restore();
   });
 
   afterEach(() => {
