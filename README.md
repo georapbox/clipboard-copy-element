@@ -62,7 +62,7 @@ clipboard-copy::part(button--disabled) {
 | Name | Reflects | Type | Default | Description |
 | ---- | -------- | ---- | ------- | ----------- |
 | `value` | ✓ | String | `null` | Optional. The value to be copied to clipboard. |
-| `from` | ✓ | String | `null` | Optional. A valid CSS selector string to target the first element within the document that matches this selector. If the element is `HTMLInputElement` or `HTMLTextAreaElement` the `value` attribute of the element will be copied. If the element is `HTMLAnchorElement` the `href` attribute of the element will be copied. In any other case, the `textContent` of the element will be copied. If both `value` and `from` properties are set, the `value` properties will take precedence over the `from` property. |
+| `from` | ✓ | String | `null` | Optional. A valid CSS selector string to target the first element within the document that matches this selector. If the element is `HTMLInputElement` or `HTMLTextAreaElement` the `value` attribute of the element will be copied. If the element is `HTMLAnchorElement` the `href` attribute of the element will be copied. In any other case, the `textContent` of the element will be copied. If both `value` and `from` properties are set, the `value` property will take precedence over the `from` property. |
 | `disabled` | ✓ | Boolean | `false` | Optional. Defines if the copy button is disabled. |
 
 All of the above properties reflect their values as HTML attributes to keep the element's DOM representation in sync with its JavaScript state.
