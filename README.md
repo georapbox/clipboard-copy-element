@@ -7,7 +7,7 @@
 [license]: https://georapbox.mit-license.org/@2022
 [changelog]: https://github.com/georapbox/clipboard-copy-element/blob/main/CHANGELOG.md
 
-# &lt;clipboard-copy&gt; element
+# &lt;clipboard-copy&gt;
 
 A custom element that implements the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) to copy text content from elements or input values to the clipboard.
 
