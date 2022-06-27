@@ -110,11 +110,13 @@ class ClipboardCopy extends HTMLElement {
 
       this.dispatchEvent(new CustomEvent('clipboard-copy:success', {
         bubbles: true,
+        composed: true,
         detail: { value: copyValue }
       }));
     } catch (error) {
       this.dispatchEvent(new CustomEvent('clipboard-copy:error', {
         bubbles: true,
+        composed: true,
         detail: { error }
       }));
     }
@@ -138,7 +140,8 @@ class ClipboardCopy extends HTMLElement {
     }
 
     this.dispatchEvent(new Event('clipboard-copy:click', {
-      bubbles: true
+      bubbles: true,
+      composed: true
     }));
 
     this._copy();
