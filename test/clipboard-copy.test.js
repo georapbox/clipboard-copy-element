@@ -1,4 +1,4 @@
-import { elementUpdated, expect, fixture, fixtureCleanup, html, waitUntil } from '@open-wc/testing';
+import { elementUpdated, expect, fixture, fixtureCleanup, html, waitUntil, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 import { ClipboardCopy } from '../src/clipboard-copy.js';
 
@@ -227,16 +227,17 @@ describe('<clipboard-copy>', () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
-    const handler = sinon.spy();
     const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
 
-    el.addEventListener('clipboard-copy:success', handler);
+    const listener = oneEvent(el, 'clipboard-copy:success');
 
     btn.click();
 
-    await waitUntil(() => handler.calledOnce);
+    const { detail } = await listener;
 
-    expect(handler).to.have.been.calledOnce;
+    expect(detail).to.deep.equal({
+      value: copyValue
+    });
 
     writeTextStub.restore();
   });
