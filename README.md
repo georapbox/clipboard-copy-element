@@ -83,31 +83,11 @@ All of the above properties reflect their values as HTML attributes to keep the 
 
 ### Events
 
-`clipboard-copy:click` - Emitted when copy button is clicked.
-
-```js
-document.addEventListener('clipboard-copy:click', evt => {
-  console.log('Copy button clicked');
-});
-```
-
-`clipboard-copy:success` - Emitted when copy is successful.
-
-```js
-document.addEventListener('clipboard-copy:success', evt => {
-  console.log(evt.detail);
-  // => { value: 'The copied text' }
-});
-```
-
-`clipboard-copy:error` - Emitted when copy fails for any reason.
-
-```js
-document.addEventListener('clipboard-copy:error', evt => {
-  console.log(evt.detail);
-  // => { error: DOMException: Document is not focused. }
-});
-```
+| Name | Description | Event Detail |
+| ---- | ----------- | ------------ |
+| `clipboard-copy:click` | Emitted when copy button is clicked. | - |
+| `clipboard-copy:success` | Emitted when copy is successful. | `{ value: String }` |
+| `clipboard-copy:error` | Emitted when copy fails for any reason. | `{ error: DOMException }` |
 
 ## Changelog
 
