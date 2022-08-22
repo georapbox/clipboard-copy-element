@@ -13,10 +13,10 @@ document.addEventListener('clipboard-copy:success', evt => {
   console.log('clipboard-copy:success ->', evt.detail);
   $console.innerHTML += `<div>$ <span class="success">clipboard-copy:success</span> -> ${JSON.stringify(evt.detail)}</div>`;
 
-  evt.target.innerHTML = '<span slot="button-content">Copied!</span>';
+  evt.target.querySelector('button').innerHTML = 'Copied!';
 
   setTimeout(() => {
-    evt.target.querySelector('[slot="button-content"]').textContent = 'Copy';
+    evt.target.querySelector('button').innerHTML = 'Copy';
   }, 1000);
 });
 

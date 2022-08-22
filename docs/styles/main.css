@@ -1,0 +1,45 @@
+:root {
+  --button-bg-color: var(--link-color);
+  --button-text-color: #ffffff;
+  --card-bg-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --button-bg-color: var(--link-color);
+    --button-text-color: #202125;
+    --card-bg-color: #283647;
+  }
+}
+
+#console:empty {
+  display: none !important;
+}
+
+.demo-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card {
+  background-color: var(--card-bg-color);
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.20);
+}
+
+.my-textarea {
+  height: 40px !important;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+
+/* Component custom styling */
+clipboard-copy:not(:defined) {
+  display: none;
+}
