@@ -1,26 +1,33 @@
-import { ClipboardCopy } from 'https://unpkg.com/@georapbox/clipboard-copy-element/dist/clipboard-copy.min.js';
+const isLocalhost = window.location.href.includes('127.0.0.1') || window.location.href.includes('localhost');
+const componentUrl = isLocalhost ? '../../src/clipboard-copy.js' : 'https://unpkg.com/@georapbox/clipboard-copy-element/dist/clipboard-copy.min.js';
 
-ClipboardCopy.defineCustomElement();
+import(componentUrl).then(res => {
+  const { ClipboardCopy } = res;
 
-const $console = document.getElementById('console');
+  ClipboardCopy.defineCustomElement();
 
-document.addEventListener('clipboard-copy:click', evt => {
-  console.log('clipboard-copy:click ->', evt);
-  $console.innerHTML += `<div>$ <span class="info">clipboard-copy:click</span> -> Button clicked</div>`;
-});
+  const $console = document.getElementById('console');
 
-document.addEventListener('clipboard-copy:success', evt => {
-  console.log('clipboard-copy:success ->', evt.detail);
-  $console.innerHTML += `<div>$ <span class="success">clipboard-copy:success</span> -> ${JSON.stringify(evt.detail)}</div>`;
+  document.addEventListener('clipboard-copy:click', evt => {
+    console.log('clipboard-copy:click ->', evt);
+    $console.innerHTML += `<div>$ <span class="info">clipboard-copy:click</span> -> Button clicked</div>`;
+  });
 
-  evt.target.querySelector('button').innerHTML = 'Copied!';
+  document.addEventListener('clipboard-copy:success', evt => {
+    console.log('clipboard-copy:success ->', evt.detail);
+    $console.innerHTML += `<div>$ <span class="success">clipboard-copy:success</span> -> ${JSON.stringify(evt.detail)}</div>`;
 
-  setTimeout(() => {
-    evt.target.querySelector('button').innerHTML = 'Copy';
-  }, 1000);
-});
+    evt.target.querySelector('button').innerHTML = 'Copied!';
 
-document.addEventListener('clipboard-copy:error', evt => {
-  console.log('clipboard-copy:error ->', evt.detail);
-  $console.innerHTML += `<div>$ <span class="error">clipboard-copy:error</span> -> ${evt.detail.error.name}: ${evt.detail.error.message}</div>`;
+    setTimeout(() => {
+      evt.target.querySelector('button').innerHTML = 'Copy';
+    }, 1000);
+  });
+
+  document.addEventListener('clipboard-copy:error', evt => {
+    console.log('clipboard-copy:error ->', evt.detail);
+    $console.innerHTML += `<div>$ <span class="error">clipboard-copy:error</span> -> ${evt.detail.error.name}: ${evt.detail.error.message}</div>`;
+  });
+}).catch(err => {
+  console.error(err);
 });

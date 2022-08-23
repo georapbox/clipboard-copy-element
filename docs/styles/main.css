@@ -26,8 +26,8 @@
   background-color: var(--card-bg-color);
   padding: 1rem;
   border-radius: 6px;
+  border: 1px solid var(--border);
   margin-bottom: 1.5rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.20);
 }
 
 .my-textarea {
