@@ -1,4 +1,6 @@
 :root {
+  --body-max-width: 900px;
+
   --button-bg-color: var(--link-color);
   --button-text-color: #ffffff;
   --card-bg-color: #ffffff;
