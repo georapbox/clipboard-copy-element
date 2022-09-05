@@ -520,7 +520,7 @@ code {
   color: var(--code);
   padding: 2.5px 5px;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 samp {
