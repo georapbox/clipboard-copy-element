@@ -24,7 +24,7 @@ $ npm install --save @georapbox/clipboard-copy-element
 ### Script
 
 ```js
-import { ClipboardCopy } from './node_modules/@georapbox/clipboard-copy-element/dist/clipboard-copy.min.js';
+import { ClipboardCopy } from './node_modules/@georapbox/clipboard-copy-element/dist/clipboard-copy.js';
 
 // Manually define the element.
 ClipboardCopy.defineCustomElement();
@@ -33,7 +33,7 @@ ClipboardCopy.defineCustomElement();
 Alternatively, you can import the automatically defined custom element.
 
 ```js
-import './node_modules/@georapbox/clipboard-copy-element/dist/clipboard-copy-defined.min.js';
+import './node_modules/@georapbox/clipboard-copy-element/dist/clipboard-copy-defined.js';
 ```
 
 ### Markup

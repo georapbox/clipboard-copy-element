@@ -7,6 +7,9 @@ template.innerHTML = html`
 `;
 
 class ClipboardCopy extends HTMLElement {
+  #buttonSlot;
+  #buttonEl;
+
   constructor() {
     super();
 
@@ -15,11 +18,8 @@ class ClipboardCopy extends HTMLElement {
       this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
-    this._buttonSlot = this.shadowRoot.querySelector('slot[name="button"]');
-    this.$button = this._getButton();
-
-    this._onClick = this._onClick.bind(this);
-    this._onSlotChange = this._onSlotChange.bind(this);
+    this.#buttonSlot = this.shadowRoot.querySelector('slot[name="button"]');
+    this.#buttonEl = this.#getButton();
   }
 
   static get observedAttributes() {
@@ -27,26 +27,26 @@ class ClipboardCopy extends HTMLElement {
   }
 
   connectedCallback() {
-    this._buttonSlot && this._buttonSlot.addEventListener('slotchange', this._onSlotChange);
-    this.$button && this.$button.addEventListener('click', this._onClick);
+    this.#upgradeProperty('value');
+    this.#upgradeProperty('from');
+    this.#upgradeProperty('disabled');
 
-    this._upgradeProperty('value');
-    this._upgradeProperty('from');
-    this._upgradeProperty('disabled');
+    this.#buttonSlot && this.#buttonSlot.addEventListener('slotchange', this.#onSlotChange);
+    this.#buttonEl && this.#buttonEl.addEventListener('click', this.#onClick);
   }
 
   disconnectedCallback() {
-    this._buttonSlot.removeEventListener('slotchange', this._onSlotChange);
-    this.$button && this.$button.removeEventListener('click', this._onClick);
+    this.#buttonSlot.removeEventListener('slotchange', this.#onSlotChange);
+    this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
   }
 
   attributeChangedCallback(name) {
-    if (name === 'disabled' && this.$button) {
-      this.$button.disabled = this.disabled;
-      this.$button.setAttribute('aria-disabled', this.disabled);
+    if (name === 'disabled' && this.#buttonEl) {
+      this.#buttonEl.disabled = this.disabled;
+      this.#buttonEl.setAttribute('aria-disabled', this.disabled);
 
-      if (this.$button.part && this.$button.part.contains('button')) {
-        this.$button.part.toggle('button--disabled', this.disabled);
+      if (this.#buttonEl.part && this.#buttonEl.part.contains('button')) {
+        this.#buttonEl.part.toggle('button--disabled', this.disabled);
       }
     }
   }
@@ -79,7 +79,7 @@ class ClipboardCopy extends HTMLElement {
     this.setAttribute('from', value);
   }
 
-  async _copy() {
+  async #copy() {
     if (!this.value && !this.from) {
       return;
     }
@@ -90,7 +90,7 @@ class ClipboardCopy extends HTMLElement {
       if (this.value) {
         copyValue = this.value;
       } else if (this.from) {
-        const root = 'getRootNode' in Element.prototype ? this.$button.getRootNode({ composed: true }) : this.$button.ownerDocument;
+        const root = 'getRootNode' in Element.prototype ? this.#buttonEl.getRootNode({ composed: true }) : this.#buttonEl.ownerDocument;
         const element = root.querySelector(this.from);
 
         if (!element) {
@@ -122,17 +122,17 @@ class ClipboardCopy extends HTMLElement {
     }
   }
 
-  _getButton() {
-    if (!this._buttonSlot) {
+  #getButton() {
+    if (!this.#buttonSlot) {
       return null;
     }
 
-    return this._buttonSlot.assignedElements({ flatten: true }).find(el => {
+    return this.#buttonSlot.assignedElements({ flatten: true }).find(el => {
       return el.nodeName === 'BUTTON' || el.getAttribute('slot') === 'button';
     });
   }
 
-  _onClick(evt) {
+  #onClick = evt => {
     evt.preventDefault();
 
     if (this.disabled) {
@@ -144,23 +144,23 @@ class ClipboardCopy extends HTMLElement {
       composed: true
     }));
 
-    this._copy();
-  }
+    this.#copy();
+  };
 
-  _onSlotChange(evt) {
+  #onSlotChange = evt => {
     if (evt.target && evt.target.name === 'button') {
-      this.$button && this.$button.removeEventListener('click', this._onClick);
-      this.$button = this._getButton();
+      this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
+      this.#buttonEl = this.#getButton();
 
-      if (this.$button) {
-        this.$button.addEventListener('click', this._onClick);
+      if (this.#buttonEl) {
+        this.#buttonEl.addEventListener('click', this.#onClick);
 
-        if (this.$button.nodeName !== 'BUTTON' && !this.$button.hasAttribute('role')) {
-          this.$button.setAttribute('role', 'button');
+        if (this.#buttonEl.nodeName !== 'BUTTON' && !this.#buttonEl.hasAttribute('role')) {
+          this.#buttonEl.setAttribute('role', 'button');
         }
       }
     }
-  }
+  };
 
   /**
    * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties
@@ -170,7 +170,7 @@ class ClipboardCopy extends HTMLElement {
    * upgraded element would miss that property and the instance property
    * would prevent the class property setter from ever being called.
    */
-  _upgradeProperty(prop) {
+  #upgradeProperty(prop) {
     if (Object.prototype.hasOwnProperty.call(this, prop)) {
       const value = this[prop];
       delete this[prop];

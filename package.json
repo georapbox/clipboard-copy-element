@@ -1,11 +1,35 @@
 {
   "name": "@georapbox/clipboard-copy-element",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "A custom element that implements the Clipboard API to copy text content from elements or input values to the clipboard.",
-  "main": "dist/clipboard-copy.min.js",
-  "module": "dist/clipboard-copy.min.js",
-  "unpkg": "dist/clipboard-copy.min.js",
+  "main": "dist/clipboard-copy.js",
+  "module": "dist/clipboard-copy.js",
+  "unpkg": "dist/clipboard-copy.js",
   "type": "module",
+  "targets": {
+    "clipboard-copy": {
+      "context": "browser",
+      "outputFormat": "esmodule",
+      "source": "src/clipboard-copy.js",
+      "optimize": true,
+      "isLibrary": true,
+      "distDir": "dist",
+      "engines": {
+        "browsers": "> 0.5%, last 2 versions, not dead"
+      }
+    },
+    "clipboard-copy-defined": {
+      "context": "browser",
+      "outputFormat": "esmodule",
+      "source": "src/clipboard-copy-defined.js",
+      "optimize": true,
+      "isLibrary": true,
+      "distDir": "dist",
+      "engines": {
+        "browsers": "> 0.5%, last 2 versions, not dead"
+      }
+    }
+  },
   "files": [
     "/src",
     "/dist"
@@ -15,8 +39,10 @@
     "test": "web-test-runner",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
-    "build": "rollup -c --environment BUILD:production",
-    "clean": "rimraf dist coverage",
+    "dev": "parcel watch",
+    "build:parcel": "parcel build",
+    "build": "npm-run-all clean build:parcel",
+    "clean": "rimraf dist coverage .parcel-cache",
     "prepare": "npm-run-all clean lint test build"
   },
   "keywords": [
@@ -39,19 +65,14 @@
   "homepage": "https://github.com/georapbox/clipboard-copy-element#readme",
   "devDependencies": {
     "@esm-bundle/chai": "~4.3.4-fix.0",
-    "@open-wc/testing": "~3.1.6",
-    "@web/test-runner": "~0.13.31",
-    "@web/test-runner-playwright": "~0.8.9",
-    "eslint": "~8.20.0",
+    "@open-wc/testing": "~3.1.7",
+    "@web/test-runner": "~0.15.0",
+    "@web/test-runner-playwright": "~0.9.0",
+    "eslint": "~8.27.0",
     "eslint-plugin-wc": "~1.3.2",
     "npm-run-all": "~4.1.5",
+    "parcel": "~2.8.0",
     "rimraf": "~3.0.2",
-    "rollup": "~2.77.1",
-    "rollup-plugin-terser": "~7.0.2",
-    "sinon": "~14.0.0"
-  },
-  "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "sinon": "~14.0.2"
   }
 }
