@@ -1,8 +1,6 @@
 const template = document.createElement('template');
 
-const html = String.raw;
-
-template.innerHTML = html`
+template.innerHTML = /* html */`
   <slot name="button"><button type="button" part="button"><slot name="button-content">Copy</slot></button></slot>
 `;
 
