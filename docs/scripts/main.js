@@ -8,11 +8,6 @@ import(componentUrl).then(res => {
 
   const $console = document.getElementById('console');
 
-  document.addEventListener('clipboard-copy:click', evt => {
-    console.log('clipboard-copy:click ->', evt);
-    $console.innerHTML += `<div>$ <span class="info">clipboard-copy:click</span> -> Button clicked</div>`;
-  });
-
   document.addEventListener('clipboard-copy:success', evt => {
     console.log('clipboard-copy:success ->', evt.detail);
     $console.innerHTML += `<div>$ <span class="success">clipboard-copy:success</span> -> ${JSON.stringify(evt.detail)}</div>`;
