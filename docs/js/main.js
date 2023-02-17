@@ -1,5 +1,5 @@
 const isLocalhost = window.location.href.includes('127.0.0.1') || window.location.href.includes('localhost');
-const componentUrl = isLocalhost ? '../../dist/clipboard-copy.js' : 'https://unpkg.com/@georapbox/clipboard-copy-element';
+const componentUrl = isLocalhost ? '../../dist/clipboard-copy.js' : '../lib/clipboard-copy.js';
 
 import(componentUrl).then(res => {
   const { ClipboardCopy } = res;
