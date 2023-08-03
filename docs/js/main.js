@@ -1,5 +1,5 @@
 const isLocalhost = window.location.href.includes('127.0.0.1') || window.location.href.includes('localhost');
-const componentUrl = !isLocalhost ? '../../dist/clipboard-copy-defined.js' : '../lib/clipboard-copy-defined.js';
+const componentUrl = isLocalhost ? '../../dist/clipboard-copy-defined.js' : '../lib/clipboard-copy-defined.js';
 
 import(componentUrl).then(() => {
   document.addEventListener('clipboard-copy-success', evt => {
