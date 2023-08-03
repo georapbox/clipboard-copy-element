@@ -71,8 +71,8 @@ All of the above properties reflect their values as HTML attributes to keep the 
 
 | Name | Description |
 | ---- | ----------- |
-| `button` | Override the copy button with another element of your preference. Example: `<a href="#" slot="button" role="button">Copy text</a>` |
-| `button-content` | Override the copy button's content with content of your preference. Useful if all you need is to change the button's label. Example: `<span slot="button-content">Copy text</span>` |
+| `button` | Override the button with another element of your preference. Example: `<a href="#" slot="button" role="button">Copy text</a>` |
+| `copy` | Override the button's default label. Example: `<span slot="copy">Copy text</span>` |
 
 ### CSS Parts
 

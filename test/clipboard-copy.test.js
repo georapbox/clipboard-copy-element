@@ -85,14 +85,14 @@ describe('<clipboard-copy>', () => {
     expect(el).lightDom.to.equal('<a href="#" slot="button" role="button">Copy</a>');
   });
 
-  it('change button-content slot', async () => {
+  it('change `copy` slot', async () => {
     const el = await fixture(html`
       <clipboard-copy>
-        <span slot="button-content">Copy</span>
+        <span slot="copy">Copy to clipboard</span>
       </clipboard-copy>
     `);
 
-    expect(el).lightDom.to.equal('<span slot="button-content">Copy</span>');
+    expect(el).lightDom.to.equal('<span slot="copy">Copy to clipboard</span>');
   });
 
   it('copies from "value" attribute', async () => {

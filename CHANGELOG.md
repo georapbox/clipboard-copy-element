@@ -7,6 +7,7 @@
 - Remove `clipboard-copy:click` event.
 - Rename `clipboard-copy:success` event to `clipboard-copy-success`.
 - Rename `clipboard-copy:error` event to `clipboard-copy-error`.
+- Rename `button-content` slot to `copy`.
 
 ### Other Changes
 

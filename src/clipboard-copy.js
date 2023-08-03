@@ -2,7 +2,11 @@ const COMPONENT_NAME = 'clipboard-copy';
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
-  <slot name="button"><button type="button" part="button"><slot name="button-content">Copy</slot></button></slot>
+  <slot name="button">
+    <button type="button" part="button">
+      <slot name="copy">Copy</slot>
+    </button>
+  </slot>
 `;
 
 class ClipboardCopy extends HTMLElement {
