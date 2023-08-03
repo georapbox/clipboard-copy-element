@@ -1,4 +1,4 @@
-import { elementUpdated, expect, fixture, fixtureCleanup, html, waitUntil, oneEvent } from '@open-wc/testing';
+import { elementUpdated, expect, fixture, fixtureCleanup, html, waitUntil, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
 import { ClipboardCopy } from '../src/clipboard-copy.js';
 
@@ -12,62 +12,64 @@ describe('<clipboard-copy>', () => {
   });
 
   it('passes accessibility test', async () => {
-    const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
+    const el = await fixture(html`
+      <clipboard-copy>
+        <span slot="copy">Copy to clipboard</span>
+        <span slot="success">Copied successfully!</span>
+        <span slot="error">Error copying</span>
+      </clipboard-copy>
+    `);
     await expect(el).to.be.accessible();
   });
 
-  it('default properties', async () => {
-    const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
-
-    expect(el.value).to.be.null;
-    expect(el.getAttribute('value')).to.be.null;
-
-    expect(el.from).to.be.null;
-    expect(el.getAttribute('from')).to.be.null;
-
-    expect(el.disabled).to.be.false;
-    expect(el.getAttribute('disabled')).to.be.null;
-
-    expect(el.feedbackDuration).to.equal(1000);
-    expect(el.getAttribute('feedback-duration')).to.be.null;
-  });
-
-  it('change default properties', async () => {
-    const el = await fixture(html`<clipboard-copy value="foo" from="#foo" disabled feedback-duration="2000"></clipboard-copy>`);
-
+  it('reflects attribute "value" to property "value"', async () => {
+    const el = await fixture(html`<clipboard-copy value="foo"></clipboard-copy>`);
     expect(el.value).to.equal('foo');
-    expect(el.getAttribute('value')).to.equal('foo');
-
-    expect(el.from).to.equal('#foo');
-    expect(el.getAttribute('from')).to.equal('#foo');
-
-    expect(el.disabled).to.be.true;
-    expect(el.getAttribute('disabled')).to.equal('');
-
-    expect(el.feedbackDuration).to.equal(2000);
-    expect(el.getAttribute('feedback-duration')).to.equal('2000');
   });
 
-  it('change properties programmatically', async () => {
+  it('reflects property "value" to attribute "value"', async () => {
     const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
-
     el.value = 'foo';
-    el.from = '#foo';
-    el.disabled = true;
-    el.feedbackDuration = 2000;
-
     await elementUpdated(el);
-
-    expect(el.value).to.equal('foo');
     expect(el.getAttribute('value')).to.equal('foo');
+  });
 
+  it('reflects attribute "from" to property "from"', async () => {
+    const el = await fixture(html`<clipboard-copy from="#foo"></clipboard-copy>`);
     expect(el.from).to.equal('#foo');
+  });
+
+  it('reflects property "from" to attribute "from"', async () => {
+    const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
+    el.from = '#foo';
+    await elementUpdated(el);
     expect(el.getAttribute('from')).to.equal('#foo');
+  });
 
+  it('reflects attribute "disabled" to property "disabled"', async () => {
+    const el = await fixture(html`<clipboard-copy disabled></clipboard-copy>`);
     expect(el.disabled).to.be.true;
-    expect(el.getAttribute('disabled')).to.equal('');
+  });
 
+  it('reflects property "disabled" to attribute "disabled"', async () => {
+    const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
+    el.disabled = true;
+    await elementUpdated(el);
+    expect(el.getAttribute('disabled')).to.equal('');
+    el.disabled = false;
+    await elementUpdated(el);
+    expect(el.getAttribute('disabled')).to.be.null;
+  });
+
+  it('reflects attribute "feedback-duration" to property "feedbackDuration"', async () => {
+    const el = await fixture(html`<clipboard-copy feedback-duration="2000"></clipboard-copy>`);
     expect(el.feedbackDuration).to.equal(2000);
+  });
+
+  it('reflects property "feedbackDuration" to attribute "feedback-duration"', async () => {
+    const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
+    el.feedbackDuration = 2000;
+    await elementUpdated(el);
     expect(el.getAttribute('feedback-duration')).to.equal('2000');
   });
 
@@ -103,7 +105,7 @@ describe('<clipboard-copy>', () => {
 
   it('copies from "value" attribute', async () => {
     const copyValue = 'Text to copy from value';
-    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
+    const el = await fixture(html`<clipboard-copy value="${copyValue}"></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
@@ -116,8 +118,8 @@ describe('<clipboard-copy>', () => {
 
   it('copies value from input element', async () => {
     const copyValue = 'Text to copy from input value';
-
     const targetEl = document.createElement('input');
+
     targetEl.id = 'target-element';
     targetEl.type = 'text';
     targetEl.value = copyValue;
@@ -136,8 +138,8 @@ describe('<clipboard-copy>', () => {
 
   it('copies value from textarea element', async () => {
     const copyValue = 'Text to copy from textarea';
-
     const targetEl = document.createElement('textarea');
+
     targetEl.id = 'target-element';
     targetEl.value = copyValue;
     document.body.appendChild(targetEl);
@@ -155,8 +157,8 @@ describe('<clipboard-copy>', () => {
 
   it('copies href from anchor element', async () => {
     const copyValue = 'https://giithub.com/';
-
     const targetEl = document.createElement('a');
+
     targetEl.id = 'target-element';
     targetEl.href = copyValue;
     document.body.appendChild(targetEl);
@@ -174,8 +176,8 @@ describe('<clipboard-copy>', () => {
 
   it('copies textContent from div element', async () => {
     const copyValue = 'Text to copy from div element';
-
     const targetEl = document.createElement('div');
+
     targetEl.id = 'target-element';
     targetEl.textContent = copyValue;
     document.body.appendChild(targetEl);
@@ -217,10 +219,9 @@ describe('<clipboard-copy>', () => {
 
   it('`clipboard-copy-success` event is emitted', async () => {
     const copyValue = 'Text to copy from value';
-    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
+    const el = await fixture(html`<clipboard-copy value="${copyValue}"></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
-
     const listener = oneEvent(el, 'clipboard-copy-success');
 
     btn.click();
@@ -236,7 +237,7 @@ describe('<clipboard-copy>', () => {
 
   it('`clipboard-copy-error` event is emitted', async () => {
     const copyValue = 'Text to copy from value';
-    const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
+    const el = await fixture(html`<clipboard-copy value="${copyValue}"></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const handler = sinon.spy();
     const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
@@ -248,6 +249,58 @@ describe('<clipboard-copy>', () => {
     await waitUntil(() => handler.calledOnce);
 
     expect(handler).to.have.been.calledOnce;
+
+    writeTextStub.restore();
+  });
+
+  it('shows the success status feedback and after a timeout it restores to default', async () => {
+    const FEEDBACK_DURATION = 100;
+    const el = await fixture(html`<clipboard-copy value="Text to copy" feedback-duration="${FEEDBACK_DURATION}"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const copySlot = el.shadowRoot.querySelector('slot[name="copy"]');
+    const successSlot = el.shadowRoot.querySelector('slot[name="success"]');
+    const errorSlot = el.shadowRoot.querySelector('slot[name="error"]');
+    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
+
+    btn.click();
+
+    await waitUntil(() => !successSlot.hasAttribute('hidden'));
+
+    expect(successSlot).to.not.have.attribute('hidden');
+    expect(errorSlot).to.have.attribute('hidden');
+    expect(copySlot).to.have.attribute('hidden');
+
+    await aTimeout(FEEDBACK_DURATION + 100);
+
+    expect(successSlot).to.have.attribute('hidden');
+    expect(errorSlot).to.have.attribute('hidden');
+    expect(copySlot).to.not.have.attribute('hidden');
+
+    writeTextStub.restore();
+  });
+
+  it('shows the error status feedback and after a timeout it restores to default', async () => {
+    const FEEDBACK_DURATION = 100;
+    const el = await fixture(html`<clipboard-copy value="Text to copy" feedback-duration="${FEEDBACK_DURATION}"></clipboard-copy>`);
+    const btn = el.shadowRoot.querySelector('button');
+    const copySlot = el.shadowRoot.querySelector('slot[name="copy"]');
+    const successSlot = el.shadowRoot.querySelector('slot[name="success"]');
+    const errorSlot = el.shadowRoot.querySelector('slot[name="error"]');
+    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
+
+    btn.click();
+
+    await waitUntil(() => !errorSlot.hasAttribute('hidden'));
+
+    expect(successSlot).to.have.attribute('hidden');
+    expect(errorSlot).to.not.have.attribute('hidden');
+    expect(copySlot).to.have.attribute('hidden');
+
+    await aTimeout(FEEDBACK_DURATION + 100);
+
+    expect(successSlot).to.have.attribute('hidden');
+    expect(errorSlot).to.have.attribute('hidden');
+    expect(copySlot).to.not.have.attribute('hidden');
 
     writeTextStub.restore();
   });
