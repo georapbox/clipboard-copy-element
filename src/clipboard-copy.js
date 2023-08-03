@@ -162,12 +162,6 @@ class ClipboardCopy extends HTMLElement {
   };
 
   #showStatus(status) {
-    const validStatuses = [SUCCESS_STATUS, ERROR_STATUS];
-
-    if (!validStatuses.includes(status)) {
-      return;
-    }
-
     this.#copySlot.hidden = true;
     this.#successSlot.hidden = status !== SUCCESS_STATUS;
     this.#errorSlot.hidden = status !== ERROR_STATUS;
@@ -195,10 +189,9 @@ class ClipboardCopy extends HTMLElement {
 
   /**
    * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties
-   * This is to safe guard against cases where, for instance, a framework
-   * may have added the element to the page and set a value on one of its
-   * properties, but lazy loaded its definition. Without this guard, the
-   * upgraded element would miss that property and the instance property
+   * This is to safe guard against cases where, for instance, a framework may have added the element
+   * to the page and set a value on one of its properties, but lazy loaded its definition.
+   * Without this guard, the upgraded element would miss that property and the instance property
    * would prevent the class property setter from ever being called.
    */
   #upgradeProperty(prop) {
