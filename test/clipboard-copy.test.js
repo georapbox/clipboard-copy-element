@@ -55,36 +55,6 @@ describe('<clipboard-copy>', () => {
     expect(el.getAttribute('disabled')).to.equal('');
   });
 
-  it('change button slot', async () => {
-    const el = await fixture(html`
-      <clipboard-copy>
-        <button slot="button" type="button">Copy</button>
-      </clipboard-copy>
-    `);
-
-    expect(el).lightDom.to.equal('<button slot="button" type="button">Copy</button>');
-  });
-
-  it('change button slot with non button element', async () => {
-    const el = await fixture(html`
-      <clipboard-copy>
-        <a href="#" slot="button" role="button">Copy</a>
-      </clipboard-copy>
-    `);
-
-    expect(el).lightDom.to.equal('<a href="#" slot="button" role="button">Copy</a>');
-  });
-
-  it('role="button" is added on button slot if node is not button', async () => {
-    const el = await fixture(html`
-      <clipboard-copy>
-        <a href="#" slot="button">Copy</a>
-      </clipboard-copy>
-    `);
-
-    expect(el).lightDom.to.equal('<a href="#" slot="button" role="button">Copy</a>');
-  });
-
   it('change `copy` slot', async () => {
     const el = await fixture(html`
       <clipboard-copy>

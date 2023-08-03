@@ -71,7 +71,6 @@ All of the above properties reflect their values as HTML attributes to keep the 
 
 | Name | Description |
 | ---- | ----------- |
-| `button` | Override the button with another element of your preference. Example: `<a href="#" slot="button" role="button">Copy text</a>` |
 | `copy` | Override the button's default label. Example: `<span slot="copy">Copy text</span>` |
 
 ### CSS Parts

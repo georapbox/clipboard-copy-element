@@ -2,15 +2,12 @@ const COMPONENT_NAME = 'clipboard-copy';
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
-  <slot name="button">
-    <button type="button" part="button">
-      <slot name="copy">Copy</slot>
-    </button>
-  </slot>
+  <button type="button" part="button">
+    <slot name="copy">Copy</slot>
+  </button>
 `;
 
 class ClipboardCopy extends HTMLElement {
-  #buttonSlot;
   #buttonEl;
 
   constructor() {
@@ -21,8 +18,7 @@ class ClipboardCopy extends HTMLElement {
       this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
-    this.#buttonSlot = this.shadowRoot.querySelector('slot[name="button"]');
-    this.#buttonEl = this.#getButton();
+    this.#buttonEl = this.shadowRoot.querySelector('button');
   }
 
   static get observedAttributes() {
@@ -34,12 +30,10 @@ class ClipboardCopy extends HTMLElement {
     this.#upgradeProperty('from');
     this.#upgradeProperty('disabled');
 
-    this.#buttonSlot && this.#buttonSlot.addEventListener('slotchange', this.#onSlotChange);
     this.#buttonEl && this.#buttonEl.addEventListener('click', this.#onClick);
   }
 
   disconnectedCallback() {
-    this.#buttonSlot.removeEventListener('slotchange', this.#onSlotChange);
     this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
   }
 
@@ -125,16 +119,6 @@ class ClipboardCopy extends HTMLElement {
     }
   }
 
-  #getButton() {
-    if (!this.#buttonSlot) {
-      return null;
-    }
-
-    return this.#buttonSlot.assignedElements({ flatten: true }).find(el => {
-      return el.nodeName === 'BUTTON' || el.getAttribute('slot') === 'button';
-    });
-  }
-
   #onClick = evt => {
     evt.preventDefault();
 
@@ -143,21 +127,6 @@ class ClipboardCopy extends HTMLElement {
     }
 
     this.#copy();
-  };
-
-  #onSlotChange = evt => {
-    if (evt.target && evt.target.name === 'button') {
-      this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
-      this.#buttonEl = this.#getButton();
-
-      if (this.#buttonEl) {
-        this.#buttonEl.addEventListener('click', this.#onClick);
-
-        if (this.#buttonEl.nodeName !== 'BUTTON' && !this.#buttonEl.hasAttribute('role')) {
-          this.#buttonEl.setAttribute('role', 'button');
-        }
-      }
-    }
   };
 
   /**
