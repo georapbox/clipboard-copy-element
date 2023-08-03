@@ -1,5 +1,7 @@
 const COMPONENT_NAME = 'clipboard-copy';
 const DEFAULT_FEEDBACK_DURATION = 1000;
+const SUCCESS_STATUS = 'success';
+const ERROR_STATUS = 'error';
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
@@ -19,11 +21,11 @@ template.innerHTML = /* html */`
 `;
 
 class ClipboardCopy extends HTMLElement {
+  #timeout = null;
   #buttonEl;
   #copySlot;
   #successSlot;
   #errorSlot;
-  #timeout;
 
   constructor() {
     super();
@@ -131,7 +133,7 @@ class ClipboardCopy extends HTMLElement {
 
       await navigator.clipboard.writeText(copyValue);
 
-      this.#showSuccessFeedback();
+      this.#showStatus(SUCCESS_STATUS);
 
       this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-success`, {
         bubbles: true,
@@ -139,7 +141,7 @@ class ClipboardCopy extends HTMLElement {
         detail: { value: copyValue }
       }));
     } catch (error) {
-      this.#showErrorFeedback();
+      this.#showStatus(ERROR_STATUS);
 
       this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
         bubbles: true,
@@ -152,21 +154,28 @@ class ClipboardCopy extends HTMLElement {
   #handleClick = evt => {
     evt.preventDefault();
 
-    if (this.disabled) {
+    if (this.disabled || this.#timeout) {
       return;
     }
 
     this.#copy();
   };
 
-  #showSuccessFeedback() {
+  #showStatus(status) {
+    const validStatuses = [SUCCESS_STATUS, ERROR_STATUS];
+
+    if (!validStatuses.includes(status)) {
+      return;
+    }
+
     this.#copySlot.hidden = true;
-    this.#successSlot.hidden = false;
-    this.#errorSlot.hidden = true;
+    this.#successSlot.hidden = status !== SUCCESS_STATUS;
+    this.#errorSlot.hidden = status !== ERROR_STATUS;
 
     if (this.#buttonEl) {
+      this.#buttonEl.part.remove('button--success');
       this.#buttonEl.part.remove('button--error');
-      this.#buttonEl.part.add('button--success');
+      this.#buttonEl.part.add(`button--${status}`);
     }
 
     clearTimeout(this.#timeout);
@@ -174,32 +183,13 @@ class ClipboardCopy extends HTMLElement {
     this.#timeout = setTimeout(() => {
       this.#copySlot.hidden = false;
       this.#successSlot.hidden = true;
-
-      if (this.#buttonEl) {
-        this.#buttonEl.part.remove('button--success');
-      }
-    }, this.feedbackDuration);
-  }
-
-  #showErrorFeedback() {
-    this.#copySlot.hidden = true;
-    this.#successSlot.hidden = true;
-    this.#errorSlot.hidden = false;
-
-    if (this.#buttonEl) {
-      this.#buttonEl.part.remove('button--success');
-      this.#buttonEl.part.add('button--error');
-    }
-
-    clearTimeout(this.#timeout);
-
-    this.#timeout = setTimeout(() => {
-      this.#copySlot.hidden = false;
       this.#errorSlot.hidden = true;
 
       if (this.#buttonEl) {
-        this.#buttonEl.part.remove('button--error');
+        this.#buttonEl.part.remove(`button--${status}`);
       }
+
+      this.#timeout = null;
     }, this.feedbackDuration);
   }
 
