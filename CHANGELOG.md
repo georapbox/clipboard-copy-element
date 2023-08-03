@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v3.0.0 (2023-08-04)
+## v3.0.0 (2023-08-03)
 
 ### Breaking Changes
 
