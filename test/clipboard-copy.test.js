@@ -5,6 +5,12 @@ import { ClipboardCopy } from '../src/clipboard-copy.js';
 ClipboardCopy.defineCustomElement();
 
 describe('<clipboard-copy>', () => {
+  afterEach(() => {
+    const targetEl = document.getElementById('target-element');
+    targetEl && targetEl.remove();
+    fixtureCleanup();
+  });
+
   it('passes accessibility test', async () => {
     const el = await fixture(html`<clipboard-copy></clipboard-copy>`);
     await expect(el).to.be.accessible();
@@ -21,10 +27,13 @@ describe('<clipboard-copy>', () => {
 
     expect(el.disabled).to.be.false;
     expect(el.getAttribute('disabled')).to.be.null;
+
+    expect(el.feedbackDuration).to.equal(1000);
+    expect(el.getAttribute('feedback-duration')).to.be.null;
   });
 
   it('change default properties', async () => {
-    const el = await fixture(html`<clipboard-copy value="foo" from="#foo" disabled></clipboard-copy>`);
+    const el = await fixture(html`<clipboard-copy value="foo" from="#foo" disabled feedback-duration="2000"></clipboard-copy>`);
 
     expect(el.value).to.equal('foo');
     expect(el.getAttribute('value')).to.equal('foo');
@@ -34,6 +43,9 @@ describe('<clipboard-copy>', () => {
 
     expect(el.disabled).to.be.true;
     expect(el.getAttribute('disabled')).to.equal('');
+
+    expect(el.feedbackDuration).to.equal(2000);
+    expect(el.getAttribute('feedback-duration')).to.equal('2000');
   });
 
   it('change properties programmatically', async () => {
@@ -42,6 +54,7 @@ describe('<clipboard-copy>', () => {
     el.value = 'foo';
     el.from = '#foo';
     el.disabled = true;
+    el.feedbackDuration = 2000;
 
     await elementUpdated(el);
 
@@ -53,6 +66,9 @@ describe('<clipboard-copy>', () => {
 
     expect(el.disabled).to.be.true;
     expect(el.getAttribute('disabled')).to.equal('');
+
+    expect(el.feedbackDuration).to.equal(2000);
+    expect(el.getAttribute('feedback-duration')).to.equal('2000');
   });
 
   it('change `copy` slot', async () => {
@@ -63,6 +79,26 @@ describe('<clipboard-copy>', () => {
     `);
 
     expect(el).lightDom.to.equal('<span slot="copy">Copy to clipboard</span>');
+  });
+
+  it('change `success` slot', async () => {
+    const el = await fixture(html`
+      <clipboard-copy>
+        <span slot="success">Copied successfully!</span>
+      </clipboard-copy>
+    `);
+
+    expect(el).lightDom.to.equal('<span slot="success">Copied successfully!</span>');
+  });
+
+  it('change `error` slot', async () => {
+    const el = await fixture(html`
+      <clipboard-copy>
+        <span slot="error">Error copying</span>
+      </clipboard-copy>
+    `);
+
+    expect(el).lightDom.to.equal('<span slot="error">Error copying</span>');
   });
 
   it('copies from "value" attribute', async () => {
@@ -179,7 +215,7 @@ describe('<clipboard-copy>', () => {
     writeTextSpy.restore();
   });
 
-  it('clipboard-copy-success event is emitted', async () => {
+  it('`clipboard-copy-success` event is emitted', async () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
@@ -198,7 +234,7 @@ describe('<clipboard-copy>', () => {
     writeTextStub.restore();
   });
 
-  it('clipboard-copy-error event is emitted', async () => {
+  it('`clipboard-copy-error` event is emitted', async () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
@@ -214,11 +250,5 @@ describe('<clipboard-copy>', () => {
     expect(handler).to.have.been.calledOnce;
 
     writeTextStub.restore();
-  });
-
-  afterEach(() => {
-    const targetEl = document.getElementById('target-element');
-    targetEl && targetEl.remove();
-    fixtureCleanup();
   });
 });

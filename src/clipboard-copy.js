@@ -1,14 +1,29 @@
 const COMPONENT_NAME = 'clipboard-copy';
+const DEFAULT_FEEDBACK_DURATION = 1000;
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
+  <style>
+    :host([hidden]),
+    [hidden],
+    ::slotted([hidden]) {
+      display: none !important;
+    }
+  </style>
+
   <button type="button" part="button">
     <slot name="copy">Copy</slot>
+    <slot name="success" hidden>Copied!</slot>
+    <slot name="error" hidden>Error</slot>
   </button>
 `;
 
 class ClipboardCopy extends HTMLElement {
   #buttonEl;
+  #copySlot;
+  #successSlot;
+  #errorSlot;
+  #timeout;
 
   constructor() {
     super();
@@ -19,6 +34,9 @@ class ClipboardCopy extends HTMLElement {
     }
 
     this.#buttonEl = this.shadowRoot.querySelector('button');
+    this.#copySlot = this.shadowRoot.querySelector('slot[name="copy"]');
+    this.#successSlot = this.shadowRoot.querySelector('slot[name="success"]');
+    this.#errorSlot = this.shadowRoot.querySelector('slot[name="error"]');
   }
 
   static get observedAttributes() {
@@ -30,11 +48,11 @@ class ClipboardCopy extends HTMLElement {
     this.#upgradeProperty('from');
     this.#upgradeProperty('disabled');
 
-    this.#buttonEl && this.#buttonEl.addEventListener('click', this.#onClick);
+    this.#buttonEl && this.#buttonEl.addEventListener('click', this.#handleClick);
   }
 
   disconnectedCallback() {
-    this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
+    this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#handleClick);
   }
 
   attributeChangedCallback(name) {
@@ -58,6 +76,14 @@ class ClipboardCopy extends HTMLElement {
     } else {
       this.removeAttribute('disabled');
     }
+  }
+
+  get feedbackDuration() {
+    return Number(this.getAttribute('feedback-duration')) || DEFAULT_FEEDBACK_DURATION;
+  }
+
+  set feedbackDuration(value) {
+    this.setAttribute('feedback-duration', value);
   }
 
   get value() {
@@ -105,12 +131,16 @@ class ClipboardCopy extends HTMLElement {
 
       await navigator.clipboard.writeText(copyValue);
 
+      this.#showSuccessFeedback();
+
       this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-success`, {
         bubbles: true,
         composed: true,
         detail: { value: copyValue }
       }));
     } catch (error) {
+      this.#showErrorFeedback();
+
       this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
         bubbles: true,
         composed: true,
@@ -119,7 +149,7 @@ class ClipboardCopy extends HTMLElement {
     }
   }
 
-  #onClick = evt => {
+  #handleClick = evt => {
     evt.preventDefault();
 
     if (this.disabled) {
@@ -128,6 +158,50 @@ class ClipboardCopy extends HTMLElement {
 
     this.#copy();
   };
+
+  #showSuccessFeedback() {
+    this.#copySlot.hidden = true;
+    this.#successSlot.hidden = false;
+    this.#errorSlot.hidden = true;
+
+    if (this.#buttonEl) {
+      this.#buttonEl.part.remove('button--error');
+      this.#buttonEl.part.add('button--success');
+    }
+
+    clearTimeout(this.#timeout);
+
+    this.#timeout = setTimeout(() => {
+      this.#copySlot.hidden = false;
+      this.#successSlot.hidden = true;
+
+      if (this.#buttonEl) {
+        this.#buttonEl.part.remove('button--success');
+      }
+    }, this.feedbackDuration);
+  }
+
+  #showErrorFeedback() {
+    this.#copySlot.hidden = true;
+    this.#successSlot.hidden = true;
+    this.#errorSlot.hidden = false;
+
+    if (this.#buttonEl) {
+      this.#buttonEl.part.remove('button--success');
+      this.#buttonEl.part.add('button--error');
+    }
+
+    clearTimeout(this.#timeout);
+
+    this.#timeout = setTimeout(() => {
+      this.#copySlot.hidden = false;
+      this.#errorSlot.hidden = true;
+
+      if (this.#buttonEl) {
+        this.#buttonEl.part.remove('button--error');
+      }
+    }, this.feedbackDuration);
+  }
 
   /**
    * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties

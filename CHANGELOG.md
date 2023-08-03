@@ -9,6 +9,8 @@
 - Rename `clipboard-copy:success` event to `clipboard-copy-success`.
 - Rename `clipboard-copy:error` event to `clipboard-copy-error`.
 - Rename `button-content` slot to `copy`.
+- Add `success` and `error` slots to display feedback messages on successful and failed copy operations accordingly.
+- Add `button--success` and `button--error` CSS parts to style the button when the copy operation is successful or failed accordingly.
 
 ### Other Changes
 

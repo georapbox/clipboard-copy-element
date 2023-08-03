@@ -54,6 +54,14 @@ clipboard-copy::part(button) {
 clipboard-copy::part(button--disabled) {
   /* The button element - disabled state */
 }
+
+clipboard-copy::part(button--success) {
+  /* The button element - success state */
+}
+
+clipboard-copy::part(button--error) {
+  /* The button element - error state */
+}
 ```
 
 ## API
@@ -64,21 +72,26 @@ clipboard-copy::part(button--disabled) {
 | `value` | ✓ | String | `null` | Optional. The value to be copied to clipboard. |
 | `from` | ✓ | String | `null` | Optional. A valid CSS selector string to target the first element within the document that matches this selector. If the element is `HTMLInputElement` or `HTMLTextAreaElement` the `value` attribute of the element will be copied. If the element is `HTMLAnchorElement` the `href` attribute of the element will be copied. In any other case, the `textContent` of the element will be copied. If both `value` and `from` properties are set, the `value` property will take precedence over the `from` property. |
 | `disabled` | ✓ | Boolean | `false` | Optional. Defines if the copy button is disabled. |
+| `feedbackDuration`<br>*`feedback-duration`* | ✓ | Number | 1000 | The duration (in milliseconds) that the feedback is displayed before restoring the default button's content. |
 
 All of the above properties reflect their values as HTML attributes to keep the element's DOM representation in sync with its JavaScript state.
 
 ### Slots
 
-| Name | Description |
-| ---- | ----------- |
-| `copy` | Override the button's default label. Example: `<span slot="copy">Copy text</span>` |
+| Name | Default | Description |
+| ---- | ------- | ----------- |
+| `copy` | "Copy" | Override the button's default content. Example: `<span slot="copy">Copy text</span>` |
+| `success` | "Copied!" | Override the button's feedback for success. Example: `<span slot="success">Copied successfully!</span>` |
+| `error` | "Error" | Override the button's feedback for error. Example: `<span slot="error">Could not copy!</span>` |
 
 ### CSS Parts
 
 | Name | Description |
 | ---- | ----------- |
-| `button` | The copy button. |
-| `button--disabled` | The copy button when is disabled. |
+| `button` | Represents the button element. |
+| `button--disabled` | Represents the disabled state of the button. |
+| `button--success` | Represents the success state of the button. |
+| `button--error` | Represents the error state of the button. |
 
 ### Events
 

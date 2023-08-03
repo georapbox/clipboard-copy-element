@@ -1,5 +1,5 @@
 :root {
-  --body-max-width: 900px;
+  --body-max-width: 768px;
 
   --button-bg-color: var(--link-color);
   --button-text-color: #ffffff;
@@ -32,6 +32,10 @@
   margin-bottom: 1.5rem;
 }
 
+textarea {
+  height: 70px !important;
+}
+
 .my-textarea {
   height: 40px !important;
 }
@@ -44,4 +48,30 @@
 /* Component custom styling */
 clipboard-copy:not(:defined) {
   display: none;
+}
+
+clipboard-copy::part(button) {
+  border: 0;
+  border-radius: 6px;
+  margin: 0 6px 6px 0;
+  padding: 10px 30px;
+  background: var(--button-base);
+  color: var(--form-text);
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+clipboard-copy::part(button--disabled) {
+  cursor: not-allowed;
+}
+
+clipboard-copy::part(button--success) {
+  background: #28a745;
+  color: #ffffff;
+}
+
+clipboard-copy::part(button--error) {
+  background: #dc3545;
+  color: #ffffff;
 }
