@@ -1,12 +1,31 @@
+const COMPONENT_NAME = 'clipboard-copy';
+const DEFAULT_FEEDBACK_DURATION = 1000;
+const SUCCESS_STATUS = 'success';
+const ERROR_STATUS = 'error';
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
-  <slot name="button"><button type="button" part="button"><slot name="button-content">Copy</slot></button></slot>
+  <style>
+    :host([hidden]),
+    [hidden],
+    ::slotted([hidden]) {
+      display: none !important;
+    }
+  </style>
+
+  <button type="button" part="button">
+    <slot name="copy">Copy</slot>
+    <slot name="success" hidden>Copied!</slot>
+    <slot name="error" hidden>Error</slot>
+  </button>
 `;
 
 class ClipboardCopy extends HTMLElement {
-  #buttonSlot;
+  #timeout = null;
   #buttonEl;
+  #copySlot;
+  #successSlot;
+  #errorSlot;
 
   constructor() {
     super();
@@ -16,8 +35,10 @@ class ClipboardCopy extends HTMLElement {
       this.shadowRoot.appendChild(template.content.cloneNode(true));
     }
 
-    this.#buttonSlot = this.shadowRoot.querySelector('slot[name="button"]');
-    this.#buttonEl = this.#getButton();
+    this.#buttonEl = this.shadowRoot.querySelector('button');
+    this.#copySlot = this.shadowRoot.querySelector('slot[name="copy"]');
+    this.#successSlot = this.shadowRoot.querySelector('slot[name="success"]');
+    this.#errorSlot = this.shadowRoot.querySelector('slot[name="error"]');
   }
 
   static get observedAttributes() {
@@ -29,13 +50,11 @@ class ClipboardCopy extends HTMLElement {
     this.#upgradeProperty('from');
     this.#upgradeProperty('disabled');
 
-    this.#buttonSlot && this.#buttonSlot.addEventListener('slotchange', this.#onSlotChange);
-    this.#buttonEl && this.#buttonEl.addEventListener('click', this.#onClick);
+    this.#buttonEl && this.#buttonEl.addEventListener('click', this.#handleClick);
   }
 
   disconnectedCallback() {
-    this.#buttonSlot.removeEventListener('slotchange', this.#onSlotChange);
-    this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
+    this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#handleClick);
   }
 
   attributeChangedCallback(name) {
@@ -59,6 +78,14 @@ class ClipboardCopy extends HTMLElement {
     } else {
       this.removeAttribute('disabled');
     }
+  }
+
+  get feedbackDuration() {
+    return Number(this.getAttribute('feedback-duration')) || DEFAULT_FEEDBACK_DURATION;
+  }
+
+  set feedbackDuration(value) {
+    this.setAttribute('feedback-duration', value);
   }
 
   get value() {
@@ -106,13 +133,17 @@ class ClipboardCopy extends HTMLElement {
 
       await navigator.clipboard.writeText(copyValue);
 
-      this.dispatchEvent(new CustomEvent('clipboard-copy:success', {
+      this.#showStatus(SUCCESS_STATUS);
+
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-success`, {
         bubbles: true,
         composed: true,
         detail: { value: copyValue }
       }));
     } catch (error) {
-      this.dispatchEvent(new CustomEvent('clipboard-copy:error', {
+      this.#showStatus(ERROR_STATUS);
+
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
         bubbles: true,
         composed: true,
         detail: { error }
@@ -120,52 +151,47 @@ class ClipboardCopy extends HTMLElement {
     }
   }
 
-  #getButton() {
-    if (!this.#buttonSlot) {
-      return null;
-    }
-
-    return this.#buttonSlot.assignedElements({ flatten: true }).find(el => {
-      return el.nodeName === 'BUTTON' || el.getAttribute('slot') === 'button';
-    });
-  }
-
-  #onClick = evt => {
+  #handleClick = evt => {
     evt.preventDefault();
 
-    if (this.disabled) {
+    if (this.disabled || this.#timeout) {
       return;
     }
-
-    this.dispatchEvent(new Event('clipboard-copy:click', {
-      bubbles: true,
-      composed: true
-    }));
 
     this.#copy();
   };
 
-  #onSlotChange = evt => {
-    if (evt.target && evt.target.name === 'button') {
-      this.#buttonEl && this.#buttonEl.removeEventListener('click', this.#onClick);
-      this.#buttonEl = this.#getButton();
+  #showStatus(status) {
+    this.#copySlot.hidden = true;
+    this.#successSlot.hidden = status !== SUCCESS_STATUS;
+    this.#errorSlot.hidden = status !== ERROR_STATUS;
+
+    if (this.#buttonEl) {
+      this.#buttonEl.part.remove('button--success');
+      this.#buttonEl.part.remove('button--error');
+      this.#buttonEl.part.add(`button--${status}`);
+    }
+
+    clearTimeout(this.#timeout);
+
+    this.#timeout = setTimeout(() => {
+      this.#copySlot.hidden = false;
+      this.#successSlot.hidden = true;
+      this.#errorSlot.hidden = true;
 
       if (this.#buttonEl) {
-        this.#buttonEl.addEventListener('click', this.#onClick);
-
-        if (this.#buttonEl.nodeName !== 'BUTTON' && !this.#buttonEl.hasAttribute('role')) {
-          this.#buttonEl.setAttribute('role', 'button');
-        }
+        this.#buttonEl.part.remove(`button--${status}`);
       }
-    }
-  };
+
+      this.#timeout = null;
+    }, this.feedbackDuration);
+  }
 
   /**
    * https://developers.google.com/web/fundamentals/web-components/best-practices#lazy-properties
-   * This is to safe guard against cases where, for instance, a framework
-   * may have added the element to the page and set a value on one of its
-   * properties, but lazy loaded its definition. Without this guard, the
-   * upgraded element would miss that property and the instance property
+   * This is to safe guard against cases where, for instance, a framework may have added the element
+   * to the page and set a value on one of its properties, but lazy loaded its definition.
+   * Without this guard, the upgraded element would miss that property and the instance property
    * would prevent the class property setter from ever being called.
    */
   #upgradeProperty(prop) {
@@ -176,7 +202,7 @@ class ClipboardCopy extends HTMLElement {
     }
   }
 
-  static defineCustomElement(elementName = 'clipboard-copy') {
+  static defineCustomElement(elementName = COMPONENT_NAME) {
     if (typeof window !== 'undefined' && !window.customElements.get(elementName)) {
       window.customElements.define(elementName, ClipboardCopy);
     }

@@ -3,7 +3,7 @@
 
   --button-bg-color: var(--link-color);
   --button-text-color: #ffffff;
-  --card-bg-color: #ffffff;
+  --card-bg-color: #f9f9f9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,14 +14,23 @@
   }
 }
 
-#console:empty {
-  display: none !important;
+textarea {
+  height: 70px !important;
+  margin: 0;
 }
 
 .demo-section {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.demo-section input {
+  margin: 0;
+}
+
+.demo-section textarea {
+  height: 41px !important;
 }
 
 .card {
@@ -32,16 +41,43 @@
   margin-bottom: 1.5rem;
 }
 
-.my-textarea {
-  height: 40px !important;
+.card pre {
+  margin: 0.5rem 0 0 0;
+  max-height: 100px;
+  overflow: auto;
 }
 
-.mb-0 { margin-bottom: 0; }
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-3 { margin-bottom: 1rem; }
+.card pre:empty {
+  display: none !important;
+}
 
 /* Component custom styling */
 clipboard-copy:not(:defined) {
   display: none;
+}
+
+clipboard-copy::part(button) {
+  min-height: 41px;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 30px;
+  background: var(--button-base);
+  color: var(--form-text);
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+clipboard-copy::part(button--disabled) {
+  cursor: not-allowed;
+}
+
+clipboard-copy::part(button--success) {
+  background: #28a745;
+  color: #ffffff;
+}
+
+clipboard-copy::part(button--error) {
+  background: #dc3545;
+  color: #ffffff;
 }

@@ -1,14 +1,32 @@
 # CHANGELOG
 
-## v2.0.0 (2022-11-18)
+## v3.0.0 (2023-08-03)
 
-- Refactor to use private class fields.
-- Replace rollup.js with parcel.js for bundling.
+### Breaking Changes
+
+- Remove `clipboard-copy:click` event.
+- Remove `button` slot.
+- Rename `clipboard-copy:success` event to `clipboard-copy-success`.
+- Rename `clipboard-copy:error` event to `clipboard-copy-error`.
+- Rename `button-content` slot to `copy`.
+- Add `success` and `error` slots to display feedback messages on successful and failed copy operations accordingly.
+- Add `button--success` and `button--error` CSS parts to style the button when the copy operation is successful or failed accordingly.
+
+### Other Changes
+
 - Update dev dependencies.
+
+## v2.0.0 (2022-11-18)
 
 ### Breaking Changes
 
 - Only minified production builds will be included in the `dist` folder from now on.
+
+### Other Changes
+
+- Refactor to use private class fields.
+- Replace rollup.js with parcel.js for bundling.
+- Update dev dependencies.
 
 ## v1.0.2 (2022-07-26)
 

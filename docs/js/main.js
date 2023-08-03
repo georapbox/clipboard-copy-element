@@ -1,27 +1,21 @@
 const isLocalhost = window.location.href.includes('127.0.0.1') || window.location.href.includes('localhost');
-const componentUrl = isLocalhost ? '../../dist/clipboard-copy.js' : '../lib/clipboard-copy.js';
+const componentUrl = !isLocalhost ? '../../dist/clipboard-copy-defined.js' : '../lib/clipboard-copy-defined.js';
 
-import(componentUrl).then(res => {
-  const { ClipboardCopy } = res;
-
-  ClipboardCopy.defineCustomElement();
-
-  const $console = document.getElementById('console');
-
-  document.addEventListener('clipboard-copy:success', evt => {
-    console.log('clipboard-copy:success ->', evt.detail);
-    $console.innerHTML += `<div>$ <span class="success">clipboard-copy:success</span> -> ${JSON.stringify(evt.detail)}</div>`;
-
-    evt.target.querySelector('button').innerHTML = 'Copied!';
-
-    setTimeout(() => {
-      evt.target.querySelector('button').innerHTML = 'Copy';
-    }, 1000);
+import(componentUrl).then(() => {
+  document.addEventListener('clipboard-copy-success', evt => {
+    const preEl = evt.target.closest('.card').querySelector('.no-highlight');
+    const codeEl = preEl.querySelector('code');
+    codeEl.innerHTML += `$ clipboard-copy-success -> ${JSON.stringify(evt.detail)}\n`;
+    preEl.scrollTop = preEl.scrollHeight;
+    console.log('clipboard-copy-success ->', evt.detail);
   });
 
-  document.addEventListener('clipboard-copy:error', evt => {
-    console.log('clipboard-copy:error ->', evt.detail);
-    $console.innerHTML += `<div>$ <span class="error">clipboard-copy:error</span> -> ${evt.detail.error.name}: ${evt.detail.error.message}</div>`;
+  document.addEventListener('clipboard-copy-error', evt => {
+    const preEl = evt.target.closest('.card').querySelector('.no-highlight');
+    const codeEl = preEl.querySelector('code');
+    codeEl.innerHTML += `$ clipboard-copy-error -> ${evt.detail.error.name}: ${evt.detail.error.message}\n`;
+    preEl.scrollTop = preEl.scrollHeight;
+    console.log('clipboard-copy-error ->', evt.detail);
   });
 }).catch(err => {
   console.error(err);

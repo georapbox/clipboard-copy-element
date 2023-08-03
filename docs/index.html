@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>&lt;clipboard-copy&gt;</title>
   <meta name="description" content="A custom element that implements the Clipboard API to copy text content from elements or input values to the clipboard.">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="stylesheet" href="lib/highlight/highlight-github-dark.min.css">
   <link rel="stylesheet" href="css/water.css">
@@ -19,81 +20,79 @@
 
   <p>A custom element that implements the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API" target="_blank" rel="noreferrer noopener">Clipboard API</a> to copy text content from elements or input values to the clipboard.</p>
 
-  <h2>Examples</h2>
+  <h2>Usage examples</h2>
 
-  <h3>Copy from <code>value</code> attribute:</h3>
+  <h3>Using the <code>value</code> attribute:</h3>
 
-  <div class="card mb-3">
+  <div class="card">
     <div class="demo-section">
-      <clipboard-copy value="Copy from value attribute">
-        <button type="button" slot="button">Copy</button>
-      </clipboard-copy>
+      <clipboard-copy value="Copy from value attribute"></clipboard-copy>
     </div>
 
-    <textarea class="mb-2" placeholder="Paste here"></textarea>
+    <textarea placeholder="Paste here"></textarea>
 
     <pre class="language-html"><code>&lt;clipboard-copy value="Copy from value attribute"&gt;&lt;/clipboard-copy&gt;</code></pre>
+
+    <pre class="no-highlight"><code></code></pre>
   </div>
 
-  <h3>Copy from an element specified by the <code>from</code> attribute:</h3>
+  <h3>Using the <code>from</code> attribute:</h3>
 
-  <div class="card mb-3">
+  <div class="card">
     <div class="demo-section">
-      <clipboard-copy from="[data-element='span']">
-        <button type="button" slot="button">Copy</button>
-      </clipboard-copy>
+      <clipboard-copy from="[data-element='span']"></clipboard-copy>
       <span data-element="span">Copy text content from span element</span>
     </div>
 
-    <textarea class="mb-2" placeholder="Paste here"></textarea>
+    <textarea placeholder="Paste here"></textarea>
 
     <pre class="language-html"><code>&lt;clipboard-copy from="[data-element='span']"&gt;&lt;/clipboard-copy&gt;
 &lt;span data-element="span"&gt;Copy text content from span element&lt;/span&gt;</code></pre>
+
+    <pre class="no-highlight"><code></code></pre>
   </div>
 
-  <div class="card mb-3">
+  <div class="card">
     <div class="demo-section">
-      <clipboard-copy from="#anchor">
-        <button type="button" slot="button">Copy</button>
-      </clipboard-copy>
+      <clipboard-copy from="#anchor"></clipboard-copy>
       <a id="anchor" href="https://github.com" target="_blank" rel="noreferrer noopener">Copy href from anchor element</a>
     </div>
 
-    <textarea class="mb-2" placeholder="Paste here"></textarea>
+    <textarea placeholder="Paste here"></textarea>
 
     <pre class="language-html"><code>&lt;clipboard-copy from="#anchor"&gt;&lt;/clipboard-copy&gt;
 &lt;a id="anchor" href="https://github.com"&gt;Copy href from anchor element&lt;/a&gt;</code></pre>
+
+    <pre class="no-highlight"><code></code></pre>
   </div>
 
-  <div class="card mb-3">
+  <div class="card">
     <div class="demo-section">
-      <clipboard-copy from="input[type='text']">
-        <button type="button" slot="button">Copy</button>
-      </clipboard-copy>
-      <input value="Copy value from input element" type="text">
+      <clipboard-copy from="input[type='text']"></clipboard-copy>
+      <input value="Copy value from input element" type="text" style="flex: 1;">
     </div>
 
-    <textarea class="mb-2" placeholder="Paste here"></textarea>
+    <textarea placeholder="Paste here"></textarea>
 
     <pre class="language-html"><code>&lt;clipboard-copy from="input[type='text']"&gt;&lt;/clipboard-copy&gt;
 &lt;input value="Copy value from input element" type="text"&gt;</code></pre>
+
+    <pre class="no-highlight"><code></code></pre>
   </div>
 
-  <div class="card mb-3">
+  <div class="card">
     <div class="demo-section">
-      <clipboard-copy from=".my-textarea">
-        <button type="button" slot="button">Copy</button>
-      </clipboard-copy>
+      <clipboard-copy from=".my-textarea"></clipboard-copy>
       <textarea class="my-textarea">Copy value from textarea element</textarea>
     </div>
 
-    <textarea class="mb-2" placeholder="Paste here"></textarea>
+    <textarea placeholder="Paste here"></textarea>
 
     <pre class="language-html"><code>&lt;clipboard-copy from=".my-textarea"&gt;&lt;/clipboard-copy&gt;
 &lt;textarea class="my-textarea"&gt;Copy value from textarea element&lt;/textarea&gt;</code></pre>
-  </div>
 
-  <pre class="no-highlight"><code id="console"></code></pre>
+    <pre class="no-highlight"><code></code></pre>
+  </div>
 
   <h2>Source</h2>
 
