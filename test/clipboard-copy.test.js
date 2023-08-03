@@ -209,13 +209,13 @@ describe('<clipboard-copy>', () => {
     writeTextSpy.restore();
   });
 
-  it('clipboard-copy:success event is emitted', async () => {
+  it('clipboard-copy-success event is emitted', async () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
 
-    const listener = oneEvent(el, 'clipboard-copy:success');
+    const listener = oneEvent(el, 'clipboard-copy-success');
 
     btn.click();
 
@@ -228,14 +228,14 @@ describe('<clipboard-copy>', () => {
     writeTextStub.restore();
   });
 
-  it('clipboard-copy:error event is emitted', async () => {
+  it('clipboard-copy-error event is emitted', async () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const handler = sinon.spy();
     const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
 
-    el.addEventListener('clipboard-copy:error', handler);
+    el.addEventListener('clipboard-copy-error', handler);
 
     btn.click();
 

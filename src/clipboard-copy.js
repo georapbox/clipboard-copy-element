@@ -1,3 +1,4 @@
+const COMPONENT_NAME = 'clipboard-copy';
 const template = document.createElement('template');
 
 template.innerHTML = /* html */`
@@ -106,13 +107,13 @@ class ClipboardCopy extends HTMLElement {
 
       await navigator.clipboard.writeText(copyValue);
 
-      this.dispatchEvent(new CustomEvent('clipboard-copy:success', {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-success`, {
         bubbles: true,
         composed: true,
         detail: { value: copyValue }
       }));
     } catch (error) {
-      this.dispatchEvent(new CustomEvent('clipboard-copy:error', {
+      this.dispatchEvent(new CustomEvent(`${COMPONENT_NAME}-error`, {
         bubbles: true,
         composed: true,
         detail: { error }
@@ -171,7 +172,7 @@ class ClipboardCopy extends HTMLElement {
     }
   }
 
-  static defineCustomElement(elementName = 'clipboard-copy') {
+  static defineCustomElement(elementName = COMPONENT_NAME) {
     if (typeof window !== 'undefined' && !window.customElements.get(elementName)) {
       window.customElements.define(elementName, ClipboardCopy);
     }

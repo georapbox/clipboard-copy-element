@@ -5,6 +5,8 @@
 ### Breaking Changes
 
 - Remove `clipboard-copy:click` event.
+- Rename `clipboard-copy:success` event to `clipboard-copy-success`.
+- Rename `clipboard-copy:error` event to `clipboard-copy-error`.
 
 ### Other Changes
 

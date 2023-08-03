@@ -85,8 +85,8 @@ All of the above properties reflect their values as HTML attributes to keep the 
 
 | Name | Description | Event Detail |
 | ---- | ----------- | ------------ |
-| `clipboard-copy:success` | Emitted when copy is successful. | `{ value: String }` |
-| `clipboard-copy:error` | Emitted when copy fails for any reason. | `{ error: DOMException }` |
+| `clipboard-copy-success` | Emitted when copy is successful. | `{ value: String }` |
+| `clipboard-copy-error` | Emitted when copy fails for any reason. | `{ error: DOMException }` |
 
 ## Changelog
 
