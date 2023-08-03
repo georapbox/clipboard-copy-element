@@ -4,7 +4,7 @@
 
 ### Breaking Changes
 
-- TODO
+- Remove `clipboard-copy:click` event.
 
 ### Other Changes
 

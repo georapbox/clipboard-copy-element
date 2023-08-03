@@ -209,20 +209,6 @@ describe('<clipboard-copy>', () => {
     writeTextSpy.restore();
   });
 
-  it('clipboard-copy:click event is emitted', async () => {
-    const el = await fixture(html`<clipboard-copy value="Text to copy from value"></clipboard-copy>`);
-    const btn = el.shadowRoot.querySelector('button');
-    const handler = sinon.spy();
-
-    el.addEventListener('clipboard-copy:click', handler);
-
-    btn.click();
-
-    await waitUntil(() => handler.calledOnce);
-
-    expect(handler).to.have.been.calledOnce;
-  });
-
   it('clipboard-copy:success event is emitted', async () => {
     const copyValue = 'Text to copy from value';
     const el = await fixture(html`<clipboard-copy value=${copyValue}></clipboard-copy>`);

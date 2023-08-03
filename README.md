@@ -85,22 +85,12 @@ All of the above properties reflect their values as HTML attributes to keep the 
 
 | Name | Description | Event Detail |
 | ---- | ----------- | ------------ |
-| `clipboard-copy:click` | Emitted when copy button is clicked. | - |
 | `clipboard-copy:success` | Emitted when copy is successful. | `{ value: String }` |
 | `clipboard-copy:error` | Emitted when copy fails for any reason. | `{ error: DOMException }` |
 
 ## Changelog
 
 For API updates and breaking changes, check the [CHANGELOG][changelog].
-
-## Browser support
-
-Browsers without native [custom element support][support] require a [polyfill][polyfill].
-
-- Firefox
-- Chrome
-- Microsoft Edge
-- Safari
 
 ## License
 

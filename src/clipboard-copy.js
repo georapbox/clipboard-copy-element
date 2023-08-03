@@ -137,11 +137,6 @@ class ClipboardCopy extends HTMLElement {
       return;
     }
 
-    this.dispatchEvent(new Event('clipboard-copy:click', {
-      bubbles: true,
-      composed: true
-    }));
-
     this.#copy();
   };
 
