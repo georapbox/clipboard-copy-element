@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v3.0.1 (2023-08-22)
+
+- Clear feedback duration timeout and reset to the initial visual state when the component is disconnected from the DOM.
+
 ## v3.0.0 (2023-08-03)
 
 ### Breaking Changes
