@@ -1,6 +1,6 @@
 {
   "name": "@georapbox/clipboard-copy-element",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A custom element that implements the Clipboard API to copy text content from elements or input values to the clipboard.",
   "main": "dist/clipboard-copy.js",
   "module": "dist/clipboard-copy.js",
