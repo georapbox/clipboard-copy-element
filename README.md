@@ -2,8 +2,6 @@
 [![npm license](https://img.shields.io/npm/l/@georapbox/clipboard-copy-element.svg)](https://www.npmjs.com/package/@georapbox/clipboard-copy-element)
 
 [demo]: https://georapbox.github.io/clipboard-copy-element/
-[support]: https://caniuse.com/#feat=custom-elementsv1
-[polyfill]: https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
 [license]: https://github.com/georapbox/clipboard-copy-element/blob/main/LICENSE
 [changelog]: https://github.com/georapbox/clipboard-copy-element/blob/main/CHANGELOG.md
 
