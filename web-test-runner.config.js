@@ -5,8 +5,5 @@ export default {
   files: 'test/*.test.js',
   concurrentBrowsers: 2,
   nodeResolve: true,
-  browsers: [
-    playwrightLauncher({ product: 'chromium' }),
-    playwrightLauncher({ product: 'firefox' })
-  ]
+  browsers: [playwrightLauncher({ product: 'chromium' }), playwrightLauncher({ product: 'firefox' })]
 };

@@ -1,50 +1,30 @@
 {
   "name": "@georapbox/clipboard-copy-element",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A custom element that implements the Clipboard API to copy text content from elements or input values to the clipboard.",
   "main": "dist/clipboard-copy.js",
   "module": "dist/clipboard-copy.js",
   "unpkg": "dist/clipboard-copy.js",
   "type": "module",
-  "targets": {
-    "clipboard-copy": {
-      "context": "browser",
-      "outputFormat": "esmodule",
-      "source": "src/clipboard-copy.js",
-      "optimize": true,
-      "isLibrary": true,
-      "distDir": "dist",
-      "engines": {
-        "browsers": "> 0.5%, last 2 versions, not dead"
-      }
-    },
-    "clipboard-copy-defined": {
-      "context": "browser",
-      "outputFormat": "esmodule",
-      "source": "src/clipboard-copy-defined.js",
-      "optimize": true,
-      "isLibrary": true,
-      "distDir": "dist",
-      "engines": {
-        "browsers": "> 0.5%, last 2 versions, not dead"
-      }
-    }
-  },
   "files": [
     "/src",
     "/dist"
   ],
   "scripts": {
-    "lint": "eslint . --ext .js",
+    "lint": "eslint",
+    "format": "prettier --ignore-unknown --write .",
     "test": "web-test-runner",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
-    "dev:parcel": "parcel watch",
-    "dev": "npm-run-all clean dev:parcel",
-    "build:parcel": "parcel build",
-    "build": "npm-run-all clean build:parcel",
-    "clean": "rimraf dist .parcel-cache",
-    "prepare": "npm-run-all clean lint test build"
+    "types": "tsc --project tsconfig.json",
+    "dev:esbuild": "node ./scripts/dev.mjs",
+    "dev": "npm-run-all clean dev:esbuild",
+    "serve:dev": "web-dev-server --node-resolve --open /docs/ --watch",
+    "start": "npm-run-all --parallel \"serve:dev -- {1}\" dev",
+    "build:esbuild": "node ./scripts/build.mjs",
+    "build": "npm-run-all clean build:esbuild",
+    "clean": "rimraf dist",
+    "prepare": "npm-run-all clean lint test build types"
   },
   "keywords": [
     "custom element",
@@ -65,15 +45,20 @@
   },
   "homepage": "https://github.com/georapbox/clipboard-copy-element#readme",
   "devDependencies": {
+    "@eslint/js": "~9.9.0",
     "@esm-bundle/chai": "~4.3.4-fix.0",
-    "@open-wc/testing": "~3.2.0",
-    "@web/test-runner": "~0.17.0",
-    "@web/test-runner-playwright": "~0.10.1",
-    "eslint": "~8.46.0",
-    "eslint-plugin-wc": "~1.5.0",
+    "@open-wc/testing": "~4.0.0",
+    "@web/dev-server": "~0.4.6",
+    "@web/test-runner": "~0.18.3",
+    "@web/test-runner-playwright": "~0.11.0",
+    "esbuild": "~0.23.1",
+    "eslint": "~9.9.0",
+    "eslint-plugin-wc": "~2.1.1",
+    "globals": "~15.9.0",
     "npm-run-all": "~4.1.5",
-    "parcel": "~2.9.3",
-    "rimraf": "~5.0.1",
-    "sinon": "~15.2.0"
+    "prettier": "~3.3.3",
+    "rimraf": "~6.0.1",
+    "sinon": "~18.0.0",
+    "typescript": "~5.5.4"
   }
 }

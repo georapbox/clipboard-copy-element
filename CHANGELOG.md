@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v3.0.2 (2024-08-22)
+
+- Add type definitions for TypeScript.
+- Replace parcel with esbuild for bundling.
+- Update ESLint to use flat configuration.
+- Use Prettier for code formatting.
+- Update dev dependencies.
+
 ## v3.0.1 (2023-08-22)
 
 - Clear feedback duration timeout and reset to the initial visual state when the component is disconnected from the DOM.

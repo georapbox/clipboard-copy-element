@@ -255,7 +255,9 @@ describe('<clipboard-copy>', () => {
 
   it('shows the success status feedback and after a timeout it restores to default', async () => {
     const FEEDBACK_DURATION = 100;
-    const el = await fixture(html`<clipboard-copy value="Text to copy" feedback-duration="${FEEDBACK_DURATION}"></clipboard-copy>`);
+    const el = await fixture(
+      html`<clipboard-copy value="Text to copy" feedback-duration="${FEEDBACK_DURATION}"></clipboard-copy>`
+    );
     const btn = el.shadowRoot.querySelector('button');
     const copySlot = el.shadowRoot.querySelector('slot[name="copy"]');
     const successSlot = el.shadowRoot.querySelector('slot[name="success"]');
@@ -281,7 +283,9 @@ describe('<clipboard-copy>', () => {
 
   it('shows the error status feedback and after a timeout it restores to default', async () => {
     const FEEDBACK_DURATION = 100;
-    const el = await fixture(html`<clipboard-copy value="Text to copy" feedback-duration="${FEEDBACK_DURATION}"></clipboard-copy>`);
+    const el = await fixture(
+      html`<clipboard-copy value="Text to copy" feedback-duration="${FEEDBACK_DURATION}"></clipboard-copy>`
+    );
     const btn = el.shadowRoot.querySelector('button');
     const copySlot = el.shadowRoot.querySelector('slot[name="copy"]');
     const successSlot = el.shadowRoot.querySelector('slot[name="success"]');

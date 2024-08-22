@@ -4,12 +4,12 @@
 [demo]: https://georapbox.github.io/clipboard-copy-element/
 [support]: https://caniuse.com/#feat=custom-elementsv1
 [polyfill]: https://github.com/webcomponents/polyfills/tree/master/packages/custom-elements
-[license]: https://georapbox.mit-license.org/@2022
+[license]: https://github.com/georapbox/clipboard-copy-element/blob/main/LICENSE
 [changelog]: https://github.com/georapbox/clipboard-copy-element/blob/main/CHANGELOG.md
 
 # &lt;clipboard-copy&gt;
 
-A custom element that implements the [Clipboard API](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API) to copy text content from elements or input values to the clipboard.
+A custom element that implements the [Clipboard API](https://developer.mozilla.org/docs/Web/API/Clipboard_API) to copy text content from elements or input values to the clipboard.
 
 [API documentation](#api) &bull; [Demo][demo]
 
@@ -69,8 +69,8 @@ clipboard-copy::part(button--error) {
 ### Properties
 | Name | Reflects | Type | Default | Description |
 | ---- | -------- | ---- | ------- | ----------- |
-| `value` | ✓ | String | `null` | Optional. The value to be copied to clipboard. |
-| `from` | ✓ | String | `null` | Optional. A valid CSS selector string to target the first element within the document that matches this selector. If the element is `HTMLInputElement` or `HTMLTextAreaElement` the `value` attribute of the element will be copied. If the element is `HTMLAnchorElement` the `href` attribute of the element will be copied. In any other case, the `textContent` of the element will be copied. If both `value` and `from` properties are set, the `value` property will take precedence over the `from` property. |
+| `value` | ✓ | String | `""` | Optional. The value to be copied to clipboard. |
+| `from` | ✓ | String | `""` | Optional. A valid CSS selector string to target the first element within the document that matches this selector. If the element is `HTMLInputElement` or `HTMLTextAreaElement` the `value` attribute of the element will be copied. If the element is `HTMLAnchorElement` the `href` attribute of the element will be copied. In any other case, the `textContent` of the element will be copied. If both `value` and `from` properties are set, the `value` property will take precedence over the `from` property. |
 | `disabled` | ✓ | Boolean | `false` | Optional. Defines if the copy button is disabled. |
 | `feedbackDuration`<br>*`feedback-duration`* | ✓ | Number | 1000 | The duration (in milliseconds) that the feedback is displayed before restoring the default button's content. |
 
@@ -100,9 +100,62 @@ All of the above properties reflect their values as HTML attributes to keep the 
 | `clipboard-copy-success` | Emitted when copy is successful. | `{ value: String }` |
 | `clipboard-copy-error` | Emitted when copy fails for any reason. | `{ error: DOMException }` |
 
+### Methods
+
+| Name | Type | Description | Arguments |
+| ---- | ---- | ----------- | --------- |
+| `defineCustomElement` | Static | Defines/registers the custom element with the name provided. If no name is provided, the default name is used. The method checks if the element is already defined, hence will skip trying to redefine it. | `elementName='clipboard-copy'` |
+
 ## Changelog
 
 For API updates and breaking changes, check the [CHANGELOG][changelog].
+
+## Development setup
+
+### Prerequisites
+
+The project requires `Node.js` and `npm` to be installed on your environment. Preferrably, use [nvm](https://github.com/nvm-sh/nvm) Node Version Manager and use the version of Node.js specified in the `.nvmrc` file by running `nvm use`.
+
+### Install dependencies
+
+Install the project dependencies by running the following command.
+
+```sh
+npm install
+```
+
+### Build for development
+
+Watch for changes and start a development server by running the following command.
+
+```sh
+npm start
+```
+
+### Linting
+
+Lint the code by running the following command.
+
+```sh
+npm run lint
+```
+
+### Testing
+
+Run the tests by running any of the following commands.
+
+```sh
+npm test
+npm run test:watch # watch mode
+```
+
+### Build for production
+
+Create a production build by running the following command.
+
+```sh
+npm run build
+```
 
 ## License
 
