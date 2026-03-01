@@ -9,6 +9,7 @@ describe('<clipboard-copy>', () => {
     const targetEl = document.getElementById('target-element');
     targetEl && targetEl.remove();
     fixtureCleanup();
+    sinon.restore();
   });
 
   it('passes accessibility test', async () => {
@@ -110,10 +111,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.have.been.calledWith(copyValue);
-
-    writeTextSpy.restore();
+    sinon.assert.calledWith(writeTextSpy, copyValue);
   });
 
   it('copies value from input element', async () => {
@@ -130,10 +128,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.have.been.calledWith(copyValue);
-
-    writeTextSpy.restore();
+    sinon.assert.calledWith(writeTextSpy, copyValue);
   });
 
   it('copies value from textarea element', async () => {
@@ -149,10 +144,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.have.been.calledWith(copyValue);
-
-    writeTextSpy.restore();
+    sinon.assert.calledWith(writeTextSpy, copyValue);
   });
 
   it('copies href from anchor element', async () => {
@@ -168,10 +160,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.have.been.calledWith(copyValue);
-
-    writeTextSpy.restore();
+    sinon.assert.calledWith(writeTextSpy, copyValue);
   });
 
   it('copies textContent from div element', async () => {
@@ -187,10 +176,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.have.been.calledWith(copyValue);
-
-    writeTextSpy.restore();
+    sinon.assert.calledWith(writeTextSpy, copyValue);
   });
 
   it('tries to copy textContent from element that does not exist', async () => {
@@ -199,10 +185,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.not.have.been.called;
-
-    writeTextSpy.restore();
+    sinon.assert.notCalled(writeTextSpy);
   });
 
   it('do not provide value and from attributes', async () => {
@@ -211,10 +194,7 @@ describe('<clipboard-copy>', () => {
     const writeTextSpy = sinon.spy(navigator.clipboard, 'writeText');
 
     btn.click();
-
-    expect(writeTextSpy).to.not.have.been.called;
-
-    writeTextSpy.restore();
+    sinon.assert.notCalled(writeTextSpy);
   });
 
   it('`clipboard-copy-success` event is emitted', async () => {
@@ -240,17 +220,12 @@ describe('<clipboard-copy>', () => {
     const el = await fixture(html`<clipboard-copy value="${copyValue}"></clipboard-copy>`);
     const btn = el.shadowRoot.querySelector('button');
     const handler = sinon.spy();
-    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
+    sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
 
     el.addEventListener('clipboard-copy-error', handler);
-
     btn.click();
-
     await waitUntil(() => handler.calledOnce);
-
-    expect(handler).to.have.been.calledOnce;
-
-    writeTextStub.restore();
+    sinon.assert.calledOnce(handler);
   });
 
   it('shows the success status feedback and after a timeout it restores to default', async () => {
@@ -262,7 +237,7 @@ describe('<clipboard-copy>', () => {
     const copySlot = el.shadowRoot.querySelector('slot[name="copy"]');
     const successSlot = el.shadowRoot.querySelector('slot[name="success"]');
     const errorSlot = el.shadowRoot.querySelector('slot[name="error"]');
-    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
+    sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.resolve());
 
     btn.click();
 
@@ -277,8 +252,6 @@ describe('<clipboard-copy>', () => {
     expect(successSlot).to.have.attribute('hidden');
     expect(errorSlot).to.have.attribute('hidden');
     expect(copySlot).to.not.have.attribute('hidden');
-
-    writeTextStub.restore();
   });
 
   it('shows the error status feedback and after a timeout it restores to default', async () => {
@@ -290,7 +263,7 @@ describe('<clipboard-copy>', () => {
     const copySlot = el.shadowRoot.querySelector('slot[name="copy"]');
     const successSlot = el.shadowRoot.querySelector('slot[name="success"]');
     const errorSlot = el.shadowRoot.querySelector('slot[name="error"]');
-    const writeTextStub = sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
+    sinon.stub(navigator.clipboard, 'writeText').callsFake(() => Promise.reject());
 
     btn.click();
 
@@ -305,7 +278,5 @@ describe('<clipboard-copy>', () => {
     expect(successSlot).to.have.attribute('hidden');
     expect(errorSlot).to.have.attribute('hidden');
     expect(copySlot).to.not.have.attribute('hidden');
-
-    writeTextStub.restore();
   });
 });
